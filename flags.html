@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Flags — Deep Talks</title>
+  <link rel="icon" href="images/favicon.webp" type="image/webp" />
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    .flags-page-hero {
+      background: #f2f2f2;
+      background-image: none;
+      min-height: 200px;
+      padding: calc(60px + 2.5rem) 2rem 2.5rem;
+      margin-top: 0;
+      justify-content: center;
+      text-align: center;
+      align-items: center;
+    }
+    .page-hero.flags-page-hero .page-hero-eyebrow {
+      color: var(--grey-dark);
+      margin-bottom: 0.85rem;
+    }
+    .page-hero.flags-page-hero h1 {
+      color: var(--grey-dark);
+    }
+    @media (max-width: 979px) {
+      .page-hero.flags-page-hero {
+        min-height: 160px;
+        padding: calc(60px + 2rem) 2rem 2rem;
+      }
+    }
+
+    .flags-intro {
+      font-size: 0.95rem;
+      color: var(--green-dark);
+      line-height: 1.7;
+      margin-bottom: 2.5rem;
+    }
+
+    .flags-grid {
+      display: grid;
+      gap: 1.25rem;
+    }
+
+    .flag-card {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+      background: rgba(140, 195, 158, 0.08);
+      border: 1px solid rgba(140, 195, 158, 0.25);
+      border-radius: 8px;
+      padding: 1.5rem 1.75rem;
+      transition: background 0.2s, border-color 0.2s;
+    }
+
+    .flag-card:hover {
+      background: rgba(140, 195, 158, 0.14);
+      border-color: rgba(140, 195, 158, 0.45);
+    }
+
+    .flag-icon {
+      display: inline-flex;
+      align-items: flex-start;
+      flex-shrink: 0;
+      width: 44px;
+      height: 48px;
+      position: relative;
+    }
+
+    .flag-icon::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 3px;
+      height: 100%;
+      background: var(--grey-dark);
+      border-radius: 2px;
+    }
+
+    .flag-icon::after {
+      content: '';
+      position: absolute;
+      left: 3px;
+      top: 4px;
+      width: 36px;
+      height: 24px;
+      clip-path: polygon(0 0, 100% 0, 82% 50%, 100% 100%, 0 100%);
+    }
+
+    .flag-red::after    { background: #e53935; }
+    .flag-green::after  { background: #43a047; }
+    .flag-yellow::after { background: #fdd835; }
+    .flag-blue::after   { background: #1e88e5; }
+
+    .flag-label {
+      font-family: 'Times New Roman', serif;
+      font-size: 1.25rem;
+      font-weight: 400;
+      color: var(--grey-dark);
+      margin-bottom: 0.3rem;
+    }
+
+    .flag-desc {
+      font-size: 0.85rem;
+      color: var(--green-dark);
+      line-height: 1.55;
+      margin: 0;
+    }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <a class="nav-brand" href="index.html">
+      <img class="header-logo" src="images/deeptalks-logo.webp" alt="Deep Talks logo" />
+      Deep Talks
+    </a>
+    <input type="checkbox" id="nav-toggle" class="nav-toggle" />
+    <label for="nav-toggle" class="hamburger">☰</label>
+    <ul class="nav-links">
+      <li><a href="about.html">About</a></li>
+      <li><a href="past-topics.html">Past Topics</a></li>
+      <li><a href="flags.html">Flags</a></li>
+      <li><a href="https://drive.google.com/drive/folders/1BnhAtuRoxeofDLVrC_gHPiczwu9wM4GD" target="_blank" rel="noopener">Photos & Videos</a></li>
+    </ul>
+  </nav>
+
+  <section class="page-hero flags-page-hero">
+    <p class="page-hero-eyebrow">How We Respond</p>
+    <h1>Flags</h1>
+  </section>
+
+  <div class="content-section" style="max-width: 680px;">
+    <p class="flags-intro"><strong>Flags</strong> is a format where you raise a colored flag to signal how you want to respond, and the speaker chooses who goes next.</p>
+
+    <div class="flags-grid">
+      <div class="flag-card">
+        <span class="flag-icon flag-red"></span>
+        <div>
+          <p class="flag-label">Red — Disagree / Counterargument</p>
+          <p class="flag-desc">You want to challenge what was said or offer an opposing view.</p>
+        </div>
+      </div>
+
+      <div class="flag-card">
+        <span class="flag-icon flag-green"></span>
+        <div>
+          <p class="flag-label">Green — Agree / Elaborate</p>
+          <p class="flag-desc">You agree and want to build on or expand the point being made.</p>
+        </div>
+      </div>
+
+      <div class="flag-card">
+        <span class="flag-icon flag-yellow"></span>
+        <div>
+          <p class="flag-label">Yellow — Question for the speaker</p>
+          <p class="flag-desc">You have a question directed at the person who just spoke.</p>
+        </div>
+      </div>
+
+      <div class="flag-card">
+        <span class="flag-icon flag-blue"></span>
+        <div>
+          <p class="flag-label">Blue — Wildcard / Tangent</p>
+          <p class="flag-desc">You want to introduce a new angle or shift direction. Can be combined — e.g. Blue + Yellow for a group question.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <p>Deep Talks &nbsp;·&nbsp; <a href="index.html">Home</a> &nbsp;·&nbsp; <a href="about.html">About</a></p>
+  </footer>
+
+</body>
+</html>
