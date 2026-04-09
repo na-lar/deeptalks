@@ -383,6 +383,7 @@ button.btn-solid {
   content: '';
   position: absolute;
   inset: 0;
+  z-index: -1;
   background-image: radial-gradient(circle at 1px 1px, rgba(200,230,201,0.1) 1px, transparent 0);
   background-size: 40px 40px;
 }
@@ -440,14 +441,47 @@ button.btn-solid {
 footer {
   background: rgba(140, 195, 158, 0.08);
   border-top: 1px solid rgba(140, 195, 158, 0.25);
-  padding: 2rem;
-  text-align: center;
+  padding: 1.25rem 2rem;
   font-size: 0.75rem;
   color: var(--grey-dark);
   letter-spacing: 0.08em;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
 }
 
 footer a { color: var(--grey-dark); text-decoration: none; }
+
+.footer-icons {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+}
+
+.footer-icon-link {
+  display: flex;
+  align-items: center;
+  opacity: 0.8;
+  transition: opacity 0.2s, transform 0.2s;
+  filter: grayscale(100%);
+}
+
+.footer-icon-link:hover {
+  opacity: 1;
+  transform: scale(1.1);
+}
+
+.footer-icon-link svg {
+  width: 24px;
+  height: 24px;
+  fill: var(--grey-dark);
+}
+
+.footer-icon-link img {
+  width: 28px;
+  height: 28px;
+  object-fit: contain;
+}
 
 /* ── MEDIA ── */
 .media-grid {
