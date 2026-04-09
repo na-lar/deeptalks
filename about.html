@@ -85,8 +85,10 @@
       .content-section {
         max-width: 1120px !important;
         margin: 0 auto;
+        padding: 2rem 2rem 6rem !important;
         display: grid;
         grid-template-columns: minmax(0, 1fr) 300px;
+        grid-template-rows: auto;
         gap: 2rem;
         align-items: start;
       }
@@ -94,9 +96,10 @@
       .toc {
         margin: 0;
         position: sticky;
-        top: 90px;
+        top: 76px;
         align-self: start;
         grid-column: 2;
+        grid-row: 1 / span 2;
         height: fit-content;
         padding: 1rem 1.25rem;
       }

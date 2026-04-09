@@ -585,7 +585,7 @@ footer a { color: var(--grey-dark); text-decoration: none; }
     top: 60px;
     left: 0;
     right: 0;
-    background: rgba(140, 195, 158, 1);
+    background: rgb(220, 242, 224);
     backdrop-filter: blur(12px);
     flex-direction: column;
     gap: 1rem;
