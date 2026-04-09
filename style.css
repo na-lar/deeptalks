@@ -9,7 +9,7 @@
   --grey-mid:     #666666;
   --grey-soft:    #999999;
   --grey-light:   #cccccc;
-  --cream:        #f5f5f5;
+  --cream:        #ffffff;
   --white:        #ffffff;
 }
 
@@ -47,7 +47,7 @@ nav {
   font-family: 'Times New Roman', serif;
   font-size: 1.3rem;
   font-weight: 600;
-  color: var(--green-dark);
+  color: var(--grey-dark);
   text-decoration: none;
   letter-spacing: 0.04em;
 }
@@ -94,7 +94,7 @@ nav {
 /* ── HERO ── */
 .hero {
   min-height: 100vh;
-  background: #f2f2f2;
+  background: #ffffff;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -268,8 +268,8 @@ button.btn-solid {
 }
 
 .community-card {
-  background: rgba(255,255,255,0.8);
-  border: 1px solid rgba(200,230,201,0.5);
+  background: rgba(140, 195, 158, 0.08);
+  border: 1px solid rgba(140, 195, 158, 0.25);
   border-radius: 6px;
   padding: 2rem 1.5rem;
   display: flex;
@@ -438,7 +438,8 @@ button.btn-solid {
 
 /* ── FOOTER ── */
 footer {
-  border-top: 1px solid rgba(200,230,201,0.3);
+  background: rgba(140, 195, 158, 0.08);
+  border-top: 1px solid rgba(140, 195, 158, 0.25);
   padding: 2rem;
   text-align: center;
   font-size: 0.75rem;
@@ -520,9 +521,6 @@ footer a { color: var(--grey-dark); text-decoration: none; }
     cursor: pointer;
     color: var(--grey-dark);
     margin-left: auto;
-    background: rgba(140, 195, 158, 0.95);
-    padding: 0.25rem 0.7rem;
-    border-radius: 6px;
   }
   .nav-toggle { position: absolute; left: -9999px; }
   .nav-toggle:checked ~ .nav-links {
