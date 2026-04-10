@@ -310,6 +310,13 @@ button.btn-solid {
 
 .community-card:hover::before { opacity: 1; }
 
+.card-logo {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
 .card-badge {
   font-size: 0.65rem;
   letter-spacing: 0.2em;
