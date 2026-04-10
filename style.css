@@ -513,9 +513,8 @@ footer a { color: var(--grey-dark); text-decoration: none; }
 .footer-icon-link {
   display: flex;
   align-items: center;
-  opacity: 0.8;
+  opacity: 0.7;
   transition: opacity 0.2s, transform 0.2s;
-  filter: grayscale(100%);
 }
 
 .footer-icon-link:hover {
@@ -526,7 +525,7 @@ footer a { color: var(--grey-dark); text-decoration: none; }
 .footer-icon-link svg {
   width: 24px;
   height: 24px;
-  fill: var(--grey-dark);
+  fill: var(--green-dark);
 }
 
 .footer-icon-fb svg {
@@ -538,6 +537,7 @@ footer a { color: var(--grey-dark); text-decoration: none; }
   width: 28px;
   height: 28px;
   object-fit: contain;
+  filter: invert(30%) sepia(15%) saturate(200%) hue-rotate(100deg) brightness(80%);
 }
 
 /* ── MEDIA ── */
