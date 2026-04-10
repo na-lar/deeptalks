@@ -358,6 +358,20 @@ button.btn-solid {
   letter-spacing: 0.05em;
 }
 
+.card-read-link {
+  color: var(--green-dark);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  border-radius: 3px;
+  padding: 0.1rem 0.25rem;
+  transition: background 0.2s, color 0.2s;
+}
+.card-read-link:hover {
+  background: var(--green-dark);
+  color: white;
+  text-decoration: none;
+}
+
 .card-actions {
   display: flex;
   flex-direction: column;
