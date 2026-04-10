@@ -632,7 +632,7 @@ footer a { color: var(--grey-dark); text-decoration: none; }
     backdrop-filter: blur(12px);
     flex-direction: column;
     gap: 0;
-    padding: 0.5rem 0;
+    padding: 0;
     z-index: 99;
   }
 
