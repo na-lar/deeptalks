@@ -44,7 +44,7 @@ nav {
   display: flex;
   align-items: center;
   gap: 0.65rem;
-  font-family: 'Times New Roman', serif;
+  font-family: 'Inter', 'Helvetica Neue', 'Times New Roman', sans-serif;
   font-size: 1.3rem;
   font-weight: 600;
   color: var(--grey-dark);
