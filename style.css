@@ -66,6 +66,9 @@ nav {
 }
 
 .nav-links a {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
   color: var(--grey-dark);
   text-decoration: none;
   font-size: 0.8rem;
@@ -75,6 +78,14 @@ nav {
   padding: 0.35rem 0.75rem;
   border-radius: 999px;
   transition: background 0.25s, color 0.25s;
+}
+
+.nav-links a svg {
+  width: 15px;
+  height: 15px;
+  fill: currentColor;
+  flex-shrink: 0;
+  transition: fill 0.25s;
 }
 
 .nav-links a:hover {
@@ -504,6 +515,11 @@ footer a { color: var(--grey-dark); text-decoration: none; }
   fill: var(--grey-dark);
 }
 
+.footer-icon-fb svg {
+  width: 28px;
+  height: 28px;
+}
+
 .footer-icon-link img {
   width: 28px;
   height: 28px;
@@ -625,11 +641,13 @@ footer a { color: var(--grey-dark); text-decoration: none; }
   }
 
   .nav-toggle:checked ~ .nav-links li a {
-    display: block;
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content: flex-start;
+    align-items: center;
     width: 100%;
     padding: 0.75rem 1.25rem;
     border-radius: 0;
     box-sizing: border-box;
-    text-align: right;
   }
 }
