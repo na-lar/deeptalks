@@ -59,6 +59,11 @@
       width: 100%;
       height: auto;
       display: block;
+      opacity: 0;
+      transition: opacity 0.4s ease;
+    }
+    .gallery-item img.loaded {
+      opacity: 1;
     }
 
     .gallery-ig-note {
@@ -274,6 +279,8 @@
         img.src = 'images/gallery/' + src;
         img.alt = '';
         img.loading = 'lazy';
+        img.addEventListener('load', function() { img.classList.add('loaded'); });
+        if (img.complete) img.classList.add('loaded');
 
         item.appendChild(img);
 
