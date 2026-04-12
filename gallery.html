@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Gallery — Deep Talks</title>
+  <!-- Open Graph / Social sharing -->
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Gallery — Deep Talks" />
+  <meta property="og:description" content="Photos from Deep Talks sessions in Canggu, Bali." />
+  <meta property="og:url" content="https://deeptalkscanggu.github.io/gallery.html" />
+  <meta property="og:image" content="https://deeptalkscanggu.github.io/images/deeptalks-green.webp" />
+  <link rel="icon" href="images/favicon.webp" type="image/webp" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" />
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    .gallery-hero {
+      background: #f2f2f2;
+      background-image: none;
+      min-height: 200px;
+      padding: calc(60px + 2.5rem) 2rem 2.5rem;
+      justify-content: center;
+      text-align: center;
+      align-items: center;
+    }
+    .page-hero.gallery-hero .page-hero-eyebrow { color: var(--grey-dark); margin-bottom: 0.85rem; }
+    .page-hero.gallery-hero h1 { color: var(--grey-dark); }
+
+    @media (max-width: 979px) {
+      .page-hero.gallery-hero { min-height: 160px; padding: calc(60px + 2rem) 2rem 2rem; }
+    }
+
+    /* ── Gallery grid ── */
+    .gallery-section {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 2.5rem 1.5rem 5rem;
+    }
+
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      grid-auto-rows: 10px;
+      gap: 10px;
+    }
+
+    .gallery-item {
+      overflow: hidden;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .gallery-item:hover { transform: scale(1.02); box-shadow: 0 6px 20px rgba(0,0,0,0.18); }
+
+    .gallery-item img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .gallery-filler {
+      border-radius: 6px;
+      background: rgba(140, 195, 158, 0.92);
+    }
+
+    .gallery-ig-note {
+      font-size: 0.82rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--grey-soft);
+      margin-bottom: 1.5rem;
+      text-align: center;
+    }
+    .gallery-ig-note a {
+      color: var(--green-dark);
+      text-decoration: none;
+    }
+    .gallery-ig-note a:hover { text-decoration: underline; }
+
+    .gallery-empty {
+      text-align: center;
+      padding: 4rem 2rem;
+      color: var(--grey-soft);
+      font-size: 0.95rem;
+      grid-column: 1 / -1;
+    }
+
+    /* ── Lightbox ── */
+    .lightbox {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 200;
+      background: rgba(0, 0, 0, 0.9);
+      justify-content: center;
+      align-items: center;
+    }
+    .lightbox.open { display: flex; }
+
+    .lightbox-img {
+      max-width: 90vw;
+      max-height: 90vh;
+      object-fit: contain;
+      border-radius: 4px;
+      display: block;
+    }
+
+    .lightbox-close {
+      position: fixed;
+      top: 1rem;
+      left: 1rem;
+      width: 2.4rem;
+      height: 2.4rem;
+      background: rgba(255,255,255,0.12);
+      border: 1px solid rgba(255,255,255,0.25);
+      border-radius: 50%;
+      color: #fff;
+      font-size: 1.2rem;
+      line-height: 1;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.2s;
+      z-index: 201;
+    }
+    .lightbox-close:hover { background: rgba(255,255,255,0.25); }
+  </style>
+</head>
+<body>
+
+  <nav id="nav-root"></nav>
+
+  <section class="page-hero gallery-hero">
+    <p class="page-hero-eyebrow">Deep Talks</p>
+    <h1>Gallery</h1>
+  </section>
+
+  <div class="gallery-section">
+    <p class="gallery-ig-note">View more on <a href="https://www.instagram.com/deeptalkscanggu/" target="_blank" rel="noopener">@deeptalkscanggu ↗</a></p>
+    <div class="gallery-grid" id="gallery-grid">
+      <!-- populated by JS -->
+    </div>
+  </div>
+
+  <!-- Lightbox -->
+  <div class="lightbox" id="lightbox">
+    <button class="lightbox-close" id="lightbox-close" aria-label="Close">&#x2715;</button>
+    <img class="lightbox-img" id="lightbox-img" src="" alt="" />
+  </div>
+
+  <script>
+    // ─────────────────────────────────────────────
+    // GALLERY IMAGES
+    // Add filenames from images/gallery/ here.
+    // Example: 'session-01.jpg', 'group-photo.webp'
+    // ─────────────────────────────────────────────
+    var GALLERY_IMAGES = [
+      // 'your-image.jpg',
+    ];
+
+    // Filler: roughly 1 filler block per this many images
+    var FILLER_RATIO = 4;
+    // Filler span range (each unit = 10px row height)
+    var FILLER_MIN_SPAN = 18;
+    var FILLER_MAX_SPAN = 30;
+
+    var grid = document.getElementById('gallery-grid');
+    var lightbox = document.getElementById('lightbox');
+    var lightboxImg = document.getElementById('lightbox-img');
+    var lightboxClose = document.getElementById('lightbox-close');
+
+    function randomInt(min, max) {
+      return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+
+    // Build a mixed list of image paths and filler markers
+    function buildList(images) {
+      var list = [];
+      var fillerCount = Math.max(1, Math.round(images.length / FILLER_RATIO));
+      var positions = new Set();
+
+      // Pick random positions for fillers (spread across length + fillerCount)
+      var totalLen = images.length + fillerCount;
+      while (positions.size < fillerCount) {
+        positions.add(randomInt(0, totalLen - 1));
+      }
+
+      var imgIdx = 0;
+      for (var i = 0; i < totalLen; i++) {
+        if (positions.has(i)) {
+          list.push(null); // filler
+        } else {
+          if (imgIdx < images.length) {
+            list.push(images[imgIdx++]);
+          }
+        }
+      }
+      return list;
+    }
+
+    function setSpan(el, span) {
+      el.style.gridRowEnd = 'span ' + span;
+    }
+
+    function renderGallery() {
+      grid.innerHTML = '';
+
+      if (GALLERY_IMAGES.length === 0) {
+        var empty = document.createElement('div');
+        empty.className = 'gallery-empty';
+        empty.textContent = 'Photos coming soon.';
+        grid.appendChild(empty);
+        return;
+      }
+
+      var list = buildList(GALLERY_IMAGES);
+      var pending = 0;
+
+      list.forEach(function(src) {
+        if (src === null) {
+          // Filler block
+          var filler = document.createElement('div');
+          filler.className = 'gallery-filler';
+          var span = randomInt(FILLER_MIN_SPAN, FILLER_MAX_SPAN);
+          setSpan(filler, span);
+          grid.appendChild(filler);
+        } else {
+          // Image block
+          var item = document.createElement('div');
+          item.className = 'gallery-item';
+
+          var img = document.createElement('img');
+          img.src = 'images/gallery/' + src;
+          img.alt = '';
+          img.loading = 'lazy';
+
+          pending++;
+
+          img.addEventListener('load', function() {
+            // Compute span: (natural height / natural width) * column width ≈ rendered height
+            // Then span = Math.ceil(renderedHeight / 10) + gap rows
+            var colW = item.offsetWidth || 260;
+            var renderedH = (img.naturalHeight / img.naturalWidth) * colW;
+            var span = Math.ceil((renderedH + 10) / 10);
+            setSpan(item, span);
+            pending--;
+          });
+
+          img.addEventListener('error', function() {
+            setSpan(item, 20);
+            pending--;
+          });
+
+          item.appendChild(img);
+
+          item.addEventListener('click', function() {
+            lightboxImg.src = 'images/gallery/' + src;
+            lightboxImg.alt = src;
+            lightbox.classList.add('open');
+            document.body.style.overflow = 'hidden';
+          });
+
+          grid.appendChild(item);
+        }
+      });
+    }
+
+    function closeLightbox() {
+      lightbox.classList.remove('open');
+      lightboxImg.src = '';
+      document.body.style.overflow = '';
+    }
+
+    lightboxClose.addEventListener('click', closeLightbox);
+
+    lightbox.addEventListener('click', function(e) {
+      if (e.target === lightbox) closeLightbox();
+    });
+
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape' && lightbox.classList.contains('open')) {
+        closeLightbox();
+      }
+    });
+
+    renderGallery();
+  </script>
+
+  <script src="js/components.js"></script>
+</body>
+</html>
