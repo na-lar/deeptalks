@@ -70,7 +70,7 @@ document.addEventListener('DOMContentLoaded', function () {
           IC.facebook +
         '</a>' +
         '<a class="footer-icon-link" href="' + NOMEO_URL + '" target="_blank" rel="noopener" title="Nomeo">' +
-          '<img src="images/nomeo.webp" alt="Nomeo" style="width:24px;height:24px;object-fit:contain;" />' +
+          '<img src="images/nomeo.webp" alt="Nomeo" />' +
         '</a>' +
       '</div>';
   }
