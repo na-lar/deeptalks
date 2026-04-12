@@ -4,7 +4,6 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Gallery — Deep Talks</title>
-  <!-- Open Graph / Social sharing -->
   <meta property="og:type" content="website" />
   <meta property="og:title" content="Gallery — Deep Talks" />
   <meta property="og:description" content="Photos from Deep Talks sessions in Canggu, Bali." />
@@ -32,7 +31,6 @@
       .page-hero.gallery-hero { min-height: 160px; padding: calc(60px + 2rem) 2rem 2rem; }
     }
 
-    /* ── Gallery grid ── */
     .gallery-section {
       max-width: 1200px;
       margin: 0 auto;
@@ -40,13 +38,16 @@
     }
 
     .gallery-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-      grid-auto-rows: 10px;
-      gap: 10px;
+      columns: 3;
+      column-gap: 10px;
     }
 
+    @media (max-width: 800px) { .gallery-grid { columns: 2; } }
+    @media (max-width: 480px) { .gallery-grid { columns: 1; } }
+
     .gallery-item {
+      break-inside: avoid;
+      margin-bottom: 10px;
       overflow: hidden;
       border-radius: 6px;
       cursor: pointer;
@@ -56,14 +57,8 @@
 
     .gallery-item img {
       width: 100%;
-      height: 100%;
-      object-fit: cover;
+      height: auto;
       display: block;
-    }
-
-    .gallery-filler {
-      border-radius: 6px;
-      background: rgba(140, 195, 158, 0.92);
     }
 
     .gallery-ig-note {
@@ -74,10 +69,7 @@
       margin-bottom: 1.5rem;
       text-align: center;
     }
-    .gallery-ig-note a {
-      color: var(--green-dark);
-      text-decoration: none;
-    }
+    .gallery-ig-note a { color: var(--green-dark); text-decoration: none; }
     .gallery-ig-note a:hover { text-decoration: underline; }
 
     .gallery-empty {
@@ -85,16 +77,42 @@
       padding: 4rem 2rem;
       color: var(--grey-soft);
       font-size: 0.95rem;
-      grid-column: 1 / -1;
     }
 
-    /* ── Lightbox ── */
+    .gallery-pagination {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 2.5rem 0 1rem;
+      flex-wrap: wrap;
+    }
+
+    .gallery-pagination button {
+      min-width: 2.4rem;
+      height: 2.4rem;
+      padding: 0 0.6rem;
+      border: 1.5px solid var(--green-dark, #2d6a4f);
+      background: transparent;
+      color: var(--green-dark, #2d6a4f);
+      border-radius: 6px;
+      font-family: inherit;
+      font-size: 0.88rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.18s, color 0.18s;
+    }
+    .gallery-pagination button:hover { background: var(--green-dark, #2d6a4f); color: #fff; }
+    .gallery-pagination button.active { background: var(--green-dark, #2d6a4f); color: #fff; pointer-events: none; }
+    .gallery-pagination button:disabled { opacity: 0.35; pointer-events: none; }
+    .gallery-pagination .pg-dots { color: var(--grey-soft, #aaa); font-size: 0.9rem; padding: 0 0.2rem; line-height: 2.4rem; }
+
     .lightbox {
       display: none;
       position: fixed;
       inset: 0;
       z-index: 200;
-      background: rgba(0, 0, 0, 0.9);
+      background: rgba(0,0,0,0.9);
       justify-content: center;
       align-items: center;
     }
@@ -141,132 +159,135 @@
 
   <div class="gallery-section">
     <p class="gallery-ig-note">View more on <a href="https://www.instagram.com/deeptalkscanggu/" target="_blank" rel="noopener">@deeptalkscanggu ↗</a></p>
-    <div class="gallery-grid" id="gallery-grid">
-      <!-- populated by JS -->
-    </div>
+    <div class="gallery-grid" id="gallery-grid"></div>
   </div>
 
-  <!-- Lightbox -->
   <div class="lightbox" id="lightbox">
     <button class="lightbox-close" id="lightbox-close" aria-label="Close">&#x2715;</button>
     <img class="lightbox-img" id="lightbox-img" src="" alt="" />
   </div>
 
   <script>
-    // ─────────────────────────────────────────────
-    // GALLERY IMAGES
-    // Add filenames from images/gallery/ here.
-    // Example: 'session-01.jpg', 'group-photo.webp'
-    // ─────────────────────────────────────────────
     var GALLERY_IMAGES = [
-      // 'your-image.jpg',
+      '017.webp','016.webp','015.webp','014.webp','013.webp',
+      '012.webp','011.webp','010.webp','009.webp','008.webp',
+      '007.webp','006.webp','005.webp','004.webp','003.webp',
+      '002.webp','001.webp'
     ];
 
-    // Filler: roughly 1 filler block per this many images
-    var FILLER_RATIO = 4;
-    // Filler span range (each unit = 10px row height)
-    var FILLER_MIN_SPAN = 18;
-    var FILLER_MAX_SPAN = 30;
+    var PAGE_SIZE = 50;
+    var currentPage = 0;
 
     var grid = document.getElementById('gallery-grid');
     var lightbox = document.getElementById('lightbox');
     var lightboxImg = document.getElementById('lightbox-img');
     var lightboxClose = document.getElementById('lightbox-close');
 
-    function randomInt(min, max) {
-      return Math.floor(Math.random() * (max - min + 1)) + min;
+    function totalPages() {
+      return Math.ceil(GALLERY_IMAGES.length / PAGE_SIZE);
     }
 
-    // Build a mixed list of image paths and filler markers
-    function buildList(images) {
-      var list = [];
-      var fillerCount = Math.max(1, Math.round(images.length / FILLER_RATIO));
-      var positions = new Set();
+    function renderPagination() {
+      var old = document.getElementById('gallery-pagination');
+      if (old) old.remove();
+      if (totalPages() <= 1) return;
 
-      // Pick random positions for fillers (spread across length + fillerCount)
-      var totalLen = images.length + fillerCount;
-      while (positions.size < fillerCount) {
-        positions.add(randomInt(0, totalLen - 1));
+      var nav = document.createElement('div');
+      nav.className = 'gallery-pagination';
+      nav.id = 'gallery-pagination';
+
+      function makeBtn(label, page, isActive) {
+        var b = document.createElement('button');
+        b.textContent = label;
+        if (isActive) b.classList.add('active');
+        b.addEventListener('click', function() {
+          currentPage = page;
+          renderGallery();
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+        nav.appendChild(b);
       }
 
-      var imgIdx = 0;
-      for (var i = 0; i < totalLen; i++) {
-        if (positions.has(i)) {
-          list.push(null); // filler
-        } else {
-          if (imgIdx < images.length) {
-            list.push(images[imgIdx++]);
-          }
+      function makeDots() {
+        var s = document.createElement('span');
+        s.className = 'pg-dots';
+        s.textContent = '…';
+        nav.appendChild(s);
+      }
+
+      var prev = document.createElement('button');
+      prev.textContent = '← Prev';
+      if (currentPage === 0) prev.disabled = true;
+      prev.addEventListener('click', function() {
+        currentPage--;
+        renderGallery();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      });
+      nav.appendChild(prev);
+
+      var total = totalPages();
+      var lastDots = false;
+      for (var i = 0; i < total; i++) {
+        var near = i === 0 || i === total - 1 || Math.abs(i - currentPage) <= 1;
+        if (near) {
+          makeBtn(i + 1, i, i === currentPage);
+          lastDots = false;
+        } else if (!lastDots) {
+          makeDots();
+          lastDots = true;
         }
       }
-      return list;
-    }
 
-    function setSpan(el, span) {
-      el.style.gridRowEnd = 'span ' + span;
+      var next = document.createElement('button');
+      next.textContent = 'Next →';
+      if (currentPage >= total - 1) next.disabled = true;
+      next.addEventListener('click', function() {
+        currentPage++;
+        renderGallery();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      });
+      nav.appendChild(next);
+
+      grid.parentElement.appendChild(nav);
     }
 
     function renderGallery() {
       grid.innerHTML = '';
 
-      if (GALLERY_IMAGES.length === 0) {
+      var start = currentPage * PAGE_SIZE;
+      var pageImages = GALLERY_IMAGES.slice(start, start + PAGE_SIZE);
+
+      if (pageImages.length === 0) {
         var empty = document.createElement('div');
         empty.className = 'gallery-empty';
         empty.textContent = 'Photos coming soon.';
         grid.appendChild(empty);
+        renderPagination();
         return;
       }
 
-      var list = buildList(GALLERY_IMAGES);
-      var pending = 0;
+      pageImages.forEach(function(src) {
+        var item = document.createElement('div');
+        item.className = 'gallery-item';
 
-      list.forEach(function(src) {
-        if (src === null) {
-          // Filler block
-          var filler = document.createElement('div');
-          filler.className = 'gallery-filler';
-          var span = randomInt(FILLER_MIN_SPAN, FILLER_MAX_SPAN);
-          setSpan(filler, span);
-          grid.appendChild(filler);
-        } else {
-          // Image block
-          var item = document.createElement('div');
-          item.className = 'gallery-item';
+        var img = document.createElement('img');
+        img.src = 'images/gallery/' + src;
+        img.alt = '';
+        img.loading = 'lazy';
 
-          var img = document.createElement('img');
-          img.src = 'images/gallery/' + src;
-          img.alt = '';
-          img.loading = 'lazy';
+        item.appendChild(img);
 
-          pending++;
+        item.addEventListener('click', function() {
+          lightboxImg.src = 'images/gallery/' + src;
+          lightboxImg.alt = src;
+          lightbox.classList.add('open');
+          document.body.style.overflow = 'hidden';
+        });
 
-          img.addEventListener('load', function() {
-            // Compute span: (natural height / natural width) * column width ≈ rendered height
-            // Then span = Math.ceil(renderedHeight / 10) + gap rows
-            var colW = item.offsetWidth || 260;
-            var renderedH = (img.naturalHeight / img.naturalWidth) * colW;
-            var span = Math.ceil((renderedH + 10) / 10);
-            setSpan(item, span);
-            pending--;
-          });
-
-          img.addEventListener('error', function() {
-            setSpan(item, 20);
-            pending--;
-          });
-
-          item.appendChild(img);
-
-          item.addEventListener('click', function() {
-            lightboxImg.src = 'images/gallery/' + src;
-            lightboxImg.alt = src;
-            lightbox.classList.add('open');
-            document.body.style.overflow = 'hidden';
-          });
-
-          grid.appendChild(item);
-        }
+        grid.appendChild(item);
       });
+
+      renderPagination();
     }
 
     function closeLightbox() {
@@ -276,15 +297,11 @@
     }
 
     lightboxClose.addEventListener('click', closeLightbox);
-
     lightbox.addEventListener('click', function(e) {
       if (e.target === lightbox) closeLightbox();
     });
-
     document.addEventListener('keydown', function(e) {
-      if (e.key === 'Escape' && lightbox.classList.contains('open')) {
-        closeLightbox();
-      }
+      if (e.key === 'Escape' && lightbox.classList.contains('open')) closeLightbox();
     });
 
     renderGallery();
